@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notePadDao">
+	
+	<select id="getAllNote" resultType="NotePadVO">
+		SELECT	/*[notePadDao.xml][getAllNote]*/
+				NTPD_ID notePadId
+				, CONT content
+				, TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') createdDate
+		FROM	NOTEPAD
+	</select>
+	
+	<select id="getNoteById" resultType="NotePadVO" parameterType="string">
+		SELECT	/*[notePadDao.xml][getNoteById]*/
+				NTPD_ID notePadId
+				, CONT content
+				, TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') createdDate
+		FROM	NOTEPAD
+		WHERE	NTPD_ID = #{notePadId}
+	</select>
+	
+	<insert id="addNewNote" parameterType="NotePadVO">
+		INSERT INTO /*[notePadDao.xml][addNewNote]*/
+					NOTEPAD (
+   								NTPD_ID
+   								, CONT
+   								, CRT_DT
+   							) 
+		VALUES 				( 	'NP-'||TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NTPD_ID_SEQ.NEXTVAL,6,0)
+								, #{content}
+								, SYSDATE 
+							)
+	</insert>
+	
+	<delete id="deleteNote" parameterType="string">
+		DELETE
+		FROM	NOTEPAD
+		WHERE	NTPD_ID = #{notePadId}
+	</delete>
+
+	<update id="doModifyNote" parameterType="map">
+		UPDATE	NOTEPAD
+		SET		CONT = #{content}
+		WHERE	NTPD_ID = #{notePadId}
+	</update>
+
+</mapper>
